@@ -230,11 +230,11 @@ public class UserService {
 //    public void logout() {
 //    }
 
-    @Transactional
-    public void logout(HttpSession session) {
-        session.invalidate();
-        //return ; // 리턴 값 생각해보기!!!
-    }
+//    @Transactional
+//    public void logout(HttpSession session) {
+//        session.invalidate();
+//        //return ; // 리턴 값 생각해보기!!!
+//    }
 
 
 }

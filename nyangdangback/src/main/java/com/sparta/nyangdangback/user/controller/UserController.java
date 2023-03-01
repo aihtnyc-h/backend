@@ -64,14 +64,14 @@ public class UserController {
         return "로그인 성공";
     }
 
-    @GetMapping("/kakao/callback")
+    @GetMapping("/kakao/login")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         String createToken = kakaoService.kakaoLogin(code, response);
 
         Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, createToken.substring(7));
         cookie.setPath("/");
         response.addCookie(cookie);
-        return "redirect:/api/index";
+        return "redirect:/api/main";
     }
     // 아이디 중복확인
     //@GetMapping("/{username}/exists")
@@ -89,6 +89,7 @@ public class UserController {
 //        return mav;
 //    }
     @RequestMapping(value = "/logout", method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
     //@PostMapping("/logout")
     //@GetMapping("/logout")
     //@PutMapping("/logout")
@@ -99,6 +100,7 @@ public class UserController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/api/user/login";
+        return "로그아웃 성공"; // 내부 로직 성공, html파일 넣어주면 될것 해보기
+        //"redirect:/api/user/login";
     }
 }
