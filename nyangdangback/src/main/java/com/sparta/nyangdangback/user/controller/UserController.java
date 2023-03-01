@@ -88,7 +88,7 @@ public class UserController {
 //        mav.addObject("msg", "logout");
 //        return mav;
 //    }
-    @RequestMapping(value = "/logout", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/logout", method = {RequestMethod.GET})
     //@PostMapping("/logout")
     //@GetMapping("/logout")
     //@PutMapping("/logout")
