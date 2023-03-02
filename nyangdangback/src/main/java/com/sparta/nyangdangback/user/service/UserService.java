@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
+import static com.sparta.nyangdangback.util.ErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -112,22 +114,22 @@ public class UserService {
         // username 규칙!
         String username = signupRequestDto.getUsername();
         if (username.length() < 4 || username.length() > 10) {
-            throw  new IllegalArgumentException("아이디가 일치하지 않습니다.");
-//            return new ResponseEntity(NOT_CONGITION_USERNAME.getHttpStatus());
+//            throw  new IllegalArgumentException("아이디가 일치하지 않습니다.");
+            return new ResponseEntity(INVALIDATION_SIGNUP.getHttpStatus());
         }
         if (!username.matches("^[0-9|a-z]*$")) {
-            throw  new IllegalArgumentException("아이디가 일치하지 않습니다.");
-//            return new ResponseEntity(NOT_CONGITION_USERNAME.getHttpStatus());
+//            throw  new IllegalArgumentException("아이디가 일치하지 않습니다.");
+            return new ResponseEntity(INVALIDATION_SIGNUP.getHttpStatus());
         }
         String password = signupRequestDto.getPassword();
         System.out.println(password);
         if (password.length() < 4 || password.length() > 11) {
-            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//            return new ResponseEntity(NOT_CONGITION_PASSWORD.getHttpStatus());
+//            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            return new ResponseEntity(INVALIDATION_PASSWORD.getHttpStatus());
         }
         if (!password.matches("^[0-9|a-z|A-Z]*$")) {
-            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//            return new ResponseEntity(NOT_CONGITION_PASSWORD.getHttpStatus());
+//            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            return new ResponseEntity(INVALIDATION_PASSWORD.getHttpStatus());
         }
 //        if (bindingResult.hasErrors()) {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -143,7 +145,8 @@ public class UserService {
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
-            new IllegalArgumentException("등록된 사용자가 없습니다.");
+            new ResponseEntity(MEMBER_NOT_FOUND.getHttpStatus());
+//            new IllegalArgumentException("등록된 사용자가 없습니다.");
             // 얘외 처리하면 바로 넣기
 //            return ResponseEntity.badRequest()  // status : bad request
 //                    .body(MessageDto.builder()  // body : SuccessResponseDto (statusCode, msg)
@@ -156,7 +159,8 @@ public class UserService {
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                new IllegalArgumentException("등록된 사용자가 없습니다.");
+                new ResponseEntity(MEMBER_NOT_FOUND.getHttpStatus());
+//                new IllegalArgumentException("등록된 사용자가 없습니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -216,7 +220,8 @@ public class UserService {
         );
         // 비밀번호 확인
         if(!user.getPassword().equals(password)){
-            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            new ResponseEntity(INVALIDATION_PASSWORD.getHttpStatus());
+
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
